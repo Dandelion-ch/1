@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎄 抖音同款圣诞树 🎄</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #4CAF50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #4CAF50;
+        }
+        
+        .tree-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tree {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            line-height: 1.3;
+            color: #32CD32;
+            margin: 0 auto;
+            text-shadow: 0 0 5px #32CD32;
+        }
+        
+        .light {
+            display: inline-block;
+            animation: twinkle 1s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        .star {
+            color: gold;
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .controls {
+            margin: 25px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #FF5722, #FF9800);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .wish-text {
+            font-size: 1.5em;
+            color: #FFD700;
+            margin: 20px 0;
+            min-height: 60px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #888;
+        }
+        
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            .tree { font-size: 16px; }
+            .btn { padding: 10px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ 抖音同款圣诞树 ✨</h1>
+        
+        <div class="tree-container">
+            <div class="tree" id="treeDisplay">
+                <!-- 圣诞树将通过JavaScript生成 -->
+            </div>
+        </div>
+        
+        <div class="wish-text" id="wishText">Merry Christmas! 🎄</div>
+        
+        <div class="controls">
+            <button class="btn" onclick="changeLights()">切换灯光 💡</button>
+            <button class="btn" onclick="changeWish()">更换祝福语 💝</button>
+            <button class="btn" onclick="addSnow()">添加雪花 ❄️</button>
+        </div>
+        
+        <div class="footer">
+            <p>🎅 祝你圣诞快乐！分享给朋友一起感受节日氛围 ❤️</p>
+        </div>
+    </div>
+    
+    <script>
+        // 圣诞树设计
+        const tree = [
+            "         ★",
+            "        🎄🎄🎄",
+            "       🎄🎄🎄🎄🎄",
+            "      🎄🎄🎄🎄🎄🎄🎄",
+            "     🎄🎄🎄🎄🎄🎄🎄🎄🎄",
+            "    🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄",
+            "   🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄",
+            "  🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄",
+            " 🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄",
+            "        |||",
+            "        |||"
+        ];
+        
+        // 颜色库
+        const colors = ['#FF0000', '#00FF00', '#FFFF00', '#00FFFF', '#FF00FF', '#FFA500'];
+        const wishes = [
+            "圣诞快乐！🎅",
+            "Merry Christmas! 🎄",
+            "愿平安喜乐常伴 ❤️",
+            "祝你心想事成 ✨",
+            "圣诞老人正在路上 🦌"
+        ];
+        
+        // 初始化
+        let currentColorIndex = 0;
+        let currentWishIndex = 0;
+        
+        // 绘制圣诞树
+        function drawTree() {
+            const treeDisplay = document.getElementById('treeDisplay');
+            treeDisplay.innerHTML = '';
+            
+            tree.forEach(line => {
+                const lineDiv = document.createElement('div');
+                let lineHTML = '';
+                
+                for (let char of line) {
+                    if (char === '🎄') {
+                        const color = colors[currentColorIndex % colors.length];
+                        lineHTML += `<span class="light" style="color:${color}">${char}</span>`;
+                    } else if (char === '★') {
+                        lineHTML += `<span class="star">${char}</span>`;
+                    } else {
+                        lineHTML += char;
+                    }
+                }
+                
+                lineDiv.innerHTML = lineHTML;
+                treeDisplay.appendChild(lineDiv);
+            });
+        }
+        
+        // 切换灯光
+        function changeLights() {
+            currentColorIndex++;
+            drawTree();
+        }
+        
+        // 更换祝福语
+        function changeWish() {
+            currentWishIndex = (currentWishIndex + 1) % wishes.length;
+            document.getElementById('wishText').textContent = wishes[currentWishIndex];
+        }
+        
+        // 添加雪花
+        function addSnow() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    createSnowflake();
+                }, i * 100);
+            }
+        }
+        
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.innerHTML = '❄️';
+            snowflake.style.position = 'fixed';
+            snowflake.style.top = '-20px';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.fontSize = (15 + Math.random() * 15) + 'px';
+            snowflake.style.opacity = 0.7;
+            snowflake.style.zIndex = '999';
+            snowflake.style.animation = `fall ${3 + Math.random() * 4}s linear forwards`;
+            
+            document.body.appendChild(snowflake);
+            
+            // 添加下落动画
+            const style = document.createElement('style');
+            if (!document.querySelector('#snow-animation')) {
+                style.id = 'snow-animation';
+                style.textContent = `
+                    @keyframes fall {
+                        to { transform: translateY(100vh) rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // 3秒后移除雪花
+            setTimeout(() => {
+                if (snowflake.parentNode) {
+                    snowflake.parentNode.removeChild(snowflake);
+                }
+            }, 4000);
+        }
+        
+        // 页面加载时初始化
+        window.onload = function() {
+            drawTree();
+            // 自动切换灯光
+            setInterval(() => {
+                currentColorIndex++;
+                drawTree();
+            }, 1000);
+            
+            // 自动切换祝福语
+            setInterval(changeWish, 3000);
+            
+            // 自动添加一些雪花
+            setInterval(() => {
+                if (Math.random() > 0.7) createSnowflake();
+            }, 500);
+        };
+        
+        // 控制台欢迎信息
+        console.log('🎄 圣诞树已加载！使用按钮切换效果吧！');
+    </script>
+</body>
+</html>
